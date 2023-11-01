@@ -164,7 +164,7 @@ func handleLogicalOperators(key string, value interface{}) ([]string, []interfac
 				conditions = append(conditions, fmt.Sprintf("%s <= ?", key))
 				args = append(args, v)
 			case "$in":
-				inValues := ToSlice(v)
+				inValues := toSlice(v)
 				placeholders := make([]string, len(inValues))
 				for i := range inValues {
 					args = append(args, inValues[i])
@@ -197,14 +197,14 @@ func handleLogicalOperators(key string, value interface{}) ([]string, []interfac
 	return conditions, args
 }
 
-// ToSlice casts an interface to a []interface{} type.
-func ToSlice(i interface{}) []interface{} {
-	v, _ := ToSliceE(i)
+// toSlice casts an interface to a []interface{} type.
+func toSlice(i interface{}) []interface{} {
+	v, _ := toSliceE(i)
 	return v
 }
 
-// ToSliceE casts an interface to a []interface{} type.
-func ToSliceE(i interface{}) ([]interface{}, error) {
+// toSliceE casts an interface to a []interface{} type.
+func toSliceE(i interface{}) ([]interface{}, error) {
 	var s []interface{}
 
 	switch v := i.(type) {
