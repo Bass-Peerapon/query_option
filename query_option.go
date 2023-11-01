@@ -118,7 +118,15 @@ import (
 //	  ]
 //	}
 type QueryOption struct {
-	Filter map[string]any
+	Filter map[string]any `json:"filter_conditions,omitempty"`
+	Sort   []*SortOption  `json:"sort,omitempty"`
+	Limit  int            `json:"limit,omitempty"`  // pagination option: limit number of results
+	Offset int            `json:"offset,omitempty"` // pagination option: offset to return items from
+}
+
+type SortOption struct {
+	Field     string `json:"field"`     // field name to sort by,from json tags(in camel case), for example created_at
+	Direction int    `json:"direction"` // [-1, 1] Direction can be ascending (1) or descending (-1)
 }
 
 func (queryOption QueryOption) ConvertToPostgresFilter() (string, []interface{}) {
@@ -137,6 +145,39 @@ func (queryOption QueryOption) ConvertToPostgresFilter() (string, []interface{})
 	}
 
 	return filterClause, args
+}
+
+func (queryOption QueryOption) ConvertToPostgresSort() string {
+	var conditions []string
+	for _, sort := range queryOption.Sort {
+		var direction string
+		if sort.Direction > 0 {
+			direction = "ASC"
+		} else {
+			direction = "DESC"
+		}
+		conditions = append(conditions, fmt.Sprintf("%s %s", sort.Field, direction))
+	}
+	var sql string
+	if len(conditions) > 0 {
+		sql += "ORDER " + strings.Join(conditions, ", ")
+	}
+	return sql
+}
+
+func (quertOption QueryOption) ConvertToPostgresPagination() string {
+	var paginatorSql string
+	var limit = quertOption.Limit
+	var skipItem = (quertOption.Offset - 1) * quertOption.Limit
+	paginatorSql = fmt.Sprintf(`
+			LIMIT %d
+			OFFSET %d
+			`,
+		limit,
+		skipItem,
+	)
+
+	return paginatorSql
 }
 
 func handleLogicalOperators(key string, value interface{}) ([]string, []interface{}) {
