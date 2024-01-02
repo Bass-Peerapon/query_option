@@ -167,8 +167,8 @@ func (queryOption QueryOption) ConvertToPostgresSort() string {
 
 func (quertOption QueryOption) ConvertToPostgresPagination() string {
 	var paginatorSql string
-	var limit = quertOption.Limit
-	var skipItem = (quertOption.Offset - 1) * quertOption.Limit
+	limit := quertOption.Limit
+	skipItem := (quertOption.Offset - 1) * quertOption.Limit
 	paginatorSql = fmt.Sprintf(`
 			LIMIT %d
 			OFFSET %d
@@ -225,14 +225,12 @@ func handleLogicalOperators(key string, value interface{}) ([]string, []interfac
 					subConditions = append(subConditions, conds...)
 					subArgs = append(subArgs, valArgs...)
 				}
-
 			}
 			if len(subConditions) > 0 {
 				conditions = append(conditions, "("+strings.Join(subConditions, fmt.Sprintf(" %s ", strings.Trim(strings.ToUpper(key), "$")))+")")
 				args = append(args, subArgs...)
 			}
 		}
-
 	}
 
 	return conditions, args
@@ -259,33 +257,30 @@ func toSliceE(i interface{}) ([]interface{}, error) {
 	case []int:
 		for _, v2 := range v {
 			s = append(s, v2)
-
 		}
 		return s, nil
 
 	case []string:
 		for _, v2 := range v {
 			s = append(s, v2)
-
 		}
 		return s, nil
 
 	case []float32:
 		for _, v2 := range v {
 			s = append(s, v2)
-
 		}
 		return s, nil
 
 	case []float64:
 		for _, v2 := range v {
 			s = append(s, v2)
-
 		}
 		return s, nil
 
 	default:
 		return s, fmt.Errorf("unable to cast %#v of type %T to []interface{}", i, i)
 	}
-
 }
+
+// test merge
