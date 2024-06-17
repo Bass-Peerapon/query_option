@@ -126,10 +126,10 @@ func TestQueryOption_ConvertToPostgresSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			queryOption := query_option.QueryOption{
-				Filter: tt.fields.Filter,
-				Sort:   tt.fields.Sort,
-				Limit:  tt.fields.Limit,
-				Offset: tt.fields.Offset,
+				Filter:  tt.fields.Filter,
+				Sort:    tt.fields.Sort,
+				PerPage: tt.fields.Limit,
+				Page:    tt.fields.Offset,
 			}
 			if got := queryOption.ConvertToPostgresSort(); got != tt.want {
 				t.Errorf("QueryOption.ConvertToPostgresSort() = %v, want %v", got, tt.want)
@@ -180,10 +180,10 @@ func TestQueryOption_ConvertToPostgresPagination(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			quertOption := query_option.QueryOption{
-				Filter: tt.fields.Filter,
-				Sort:   tt.fields.Sort,
-				Limit:  tt.fields.Limit,
-				Offset: tt.fields.Offset,
+				Filter:  tt.fields.Filter,
+				Sort:    tt.fields.Sort,
+				PerPage: tt.fields.Limit,
+				Page:    tt.fields.Offset,
 			}
 			if got := quertOption.ConvertToPostgresPagination(); got != tt.want {
 				t.Errorf("QueryOption.ConvertToPostgresPagination() = %v, want %v", got, tt.want)

@@ -117,11 +117,13 @@ import (
 //	    }
 //	  ]
 //	}
+type M map[string]any
+
 type QueryOption struct {
-	Filter map[string]any `json:"filter_conditions,omitempty"`
-	Sort   []*SortOption  `json:"sort,omitempty"`
-	Limit  int            `json:"limit,omitempty"`  // pagination option: limit number of results
-	Offset int            `json:"offset,omitempty"` // pagination option: offset to return items from
+	Filter  M             `json:"filter_conditions,omitempty"`
+	Sort    []*SortOption `json:"sort,omitempty"`
+	PerPage int           `json:"per_page,omitempty"` // pagination option: limit number of results
+	Page    int           `json:"page,omitempty"`     // pagination option: offset to return items from
 }
 
 type SortOption struct {
@@ -167,8 +169,8 @@ func (queryOption QueryOption) ConvertToPostgresSort() string {
 
 func (quertOption QueryOption) ConvertToPostgresPagination() string {
 	var paginatorSql string
-	limit := quertOption.Limit
-	skipItem := (quertOption.Offset - 1) * quertOption.Limit
+	limit := quertOption.PerPage
+	skipItem := (quertOption.Page - 1) * quertOption.PerPage
 	paginatorSql = fmt.Sprintf(`
 			LIMIT %d
 			OFFSET %d
